@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.1.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean id="dataSource" 
+         class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/sys?verifyServerCertificate=false&amp;useSSL=true" />
+		<property name="username" value="root" />
+		<property name="password" value="bradOS24" />
+	</bean>
+	
+	<context:component-scan base-package="com.brados.dao" />
+ 	<context:component-scan base-package="com.brados.service" />
+	
+	<!--<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		
+	</bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="packagesToScan" ref="com.brados.model" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" /> -->
+	
+<!-- Bean for jdbc template -->
+<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg type="javax.sql.DataSource" ref="dataSource" />
+	</bean>
+
+<!-- Beans for userRepo and userService -->
+	<bean id="userRepo" class="com.brados.dao.UserDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean> 
+	<bean id="userManager" class="com.brados.service.UserServiceImpl">
+		<property name="userRepo" ref="userRepo" />
+	</bean>
+	
+	<bean id="quizRepo" class="com.brados.dao.QuizDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="quizManager" class="com.brados.service.QuizServiceImpl">
+		<property name="quizRepo" ref="quizRepo" />
+	</bean>
+	
+		
+</beans>
